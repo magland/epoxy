@@ -6,6 +6,7 @@ const findPort = require('find-port');
 function print_usage() {
   console.info('Usage:');
   console.info('epoxy [source_directory_or_url] ...');
+  console.info('epoxyhub-start');
 }
 
 var CLP = new CLParams(process.argv);
@@ -173,7 +174,7 @@ function writeJsonSync(fname, obj) {
 
 async function find_free_port(range_min,range_max) {
   return new Promise(function(resolve,reject) {
-    findPort('127.0.0.1', range[0], range[1], function(ports) {
+    findPort('127.0.0.1', range_min, range_max, function(ports) {
       if (ports.length == 0) {
         reject(new Error(`No free ports found in range ${range[0]}-${range[1]}`));
         return;
