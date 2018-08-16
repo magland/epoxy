@@ -8,14 +8,12 @@ It provides a jupyter lab session based on a source code repository, with the co
 
 ## Prerequisites
 
-* docker, and make sure your user is in the docker group
+* docker, and [make sure your user is in the docker group](https://docs.docker.com/install/linux/linux-postinstall/)
 * nodejs -- a recent version
 
 ## Installation
-
-After cloning the repository:
-
 ```
+git clone git@github.com:magland/epoxy.git
 cd epoxy
 npm install
 ```
