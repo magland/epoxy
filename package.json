@@ -1,0 +1,22 @@
+{
+  "name": "@magland/epoxy",
+  "version": "0.1.0",
+  "description": "Sort of like binder",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/magland/epoxy.git"
+  },
+  "author": "Jeremy Magland",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/magland/epoxy/issues"
+  },
+  "homepage": "https://github.com/magland/epoxy#readme",
+  "dependencies": {
+    "find-port": "^2.0.1"
+  }
+}
