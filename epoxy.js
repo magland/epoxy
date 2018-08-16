@@ -5,7 +5,8 @@ const findPort = require('find-port');
 
 function print_usage() {
   console.info('Usage:');
-  console.info('epoxy [source_directory_or_url] ...');
+  console.info('epoxy [source_directory_or_url]');
+  console.info('epoxy [source_directory_or_url] --port=[port]');
   console.info('epoxyhub-start');
 }
 
@@ -47,7 +48,11 @@ async function main() {
     await execute_script(__dirname+'/scripts/copy_files_to_build_directory.sh',{env:env});
     await execute_script(__dirname+'/scripts/prepare_source.sh',{env:env});
     await execute_script(__dirname+'/scripts/build_image.sh',{env:env});
-    env.PORT=await find_free_port(8000,9000);
+    let port=CLP.namedParameters.port;
+    if (!port) {
+      port=await find_free_port(8101,8999);
+    }
+    env.PORT=port;
     await execute_script(__dirname+'/scripts/run_container.sh',{env:env});
   }
   catch(err) {

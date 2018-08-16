@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Post build..."
+set -e
 
 if [ -e postBuild ]
 then

@@ -3,7 +3,7 @@
 const express = require('express');
 //const cors = require('cors');
 
-let listen_port = process.env.PORT || 7888;
+let listen_port = process.env.PORT || 8080;
 
 let SESSIONS = {};
 
@@ -17,13 +17,17 @@ app.use(express.json());
 app.get('/startSession', async function(req, res) {
   var query = req.query;
   let S = new Session();
+  let port=get_available_port();
+  if (!port) {
+    ret.json({
+      success:false,
+      error:'No ports available.'
+    });
+    return;
+  }
+  S.setPort(port);
   try {
     await S.start(query); // TODO
-    SESSIONS[S.id()] = S;
-    res.json({
-      success: true,
-      id: S.id()
-    });
   } catch (err) {
     res.json({
       success: false,
@@ -31,6 +35,12 @@ app.get('/startSession', async function(req, res) {
     });
     return;
   }
+  SESSIONS[S.id()] = S;
+  res.json({
+    success: true,
+    id: S.id(),
+    port: S.port()
+  });
 });
 
 app.get('/probeSession', async function(req, res) {
@@ -94,6 +104,8 @@ app.get('/stopSession', async function(req, res) {
   }
 });
 
+app.use('/web', express.static('web'));
+
 if (process.env.SSL != null ? process.env.SSL : listen_port % 1000 == 443) {
   // The port number ends with 443, so we are using https
   app.USING_HTTPS = true;
@@ -118,18 +130,60 @@ app.server.listen(listen_port, function() {
   console.info(`Server is running ${app.protocol} on port ${listen_port}`);
 });
 
+function get_available_port() {
+  let used_ports={};
+  for (let id in SESSIONS) {
+    let S=SESSIONS[id];
+    used_ports[S.port()]=true;
+  }
+  for (let pp=8101; pp<9000; pp++) {
+    if (!used_ports[pp])
+      return pp;
+  }
+  return 0;
+}
+
+function check_expired_sessions() {
+  let ids=Object.keys(SESSIONS);
+  for (let ii in ids) {
+    let id=ids[ii];
+    let S=SESSIONS[id];
+    if (S.elapsedTimeSinceProbeSec()>20) {
+      console.info('Stopping session after timeout...');
+      S.stop();
+      delete SESSIONS[id];
+    }
+  }
+  setTimeout(function() {
+    check_expired_sessions();
+  },5000);
+}
+check_expired_sessions();
+
 function Session() {
   this.id = function() {
     return m_id;
+  };
+  this.setPort=function(port) {
+    m_port=port;
+  };
+  this.port=function() {
+    return m_port;
   }
   this.start = async function(query) {
+    console.info('Starting session: '+query.source);
     return await start(query);
-  }
+  };
   this.getStatus = async function() {
     return await getStatus();
-  }
+  };
   this.stop = async function() {
+    console.info('Stopping session.');
     return await stop();
+  };
+  this.elapsedTimeSinceProbeSec=function() {
+    let elapsed=(new Date())-m_last_probe;
+    return elapsed/1000;
   }
   let m_id = make_random_id(10);
   let m_process = null;
@@ -138,10 +192,14 @@ function Session() {
   let m_finished=false;
   let m_exit_code=null;
   let m_info={};
+  let m_last_probe=new Date();
+  let m_port=null;
 
   async function start(query) {
     let exe=__dirname+'/epoxy.js';
     let args=[query.source];
+    if (m_port)
+      args.push('--port='+m_port);
     let opts={};
     m_info.query=JSON.parse(JSON.stringify(query));
     m_info.exe_command=exe+' '+args.join(' ');
@@ -165,6 +223,7 @@ function Session() {
     });
   }
   async function getStatus() {
+    m_last_probe=new Date();
     let ret={
       info:m_info,
       console_out:m_console_out,

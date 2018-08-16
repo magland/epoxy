@@ -7,11 +7,9 @@ ENV PATH /opt/conda/envs/env1/bin:$PATH
 ADD source/postBuild /build/postBuild
 ADD scripts /working/scripts
 WORKDIR /build
-RUN /working/scripts/post_build.sh
+RUN bash -c "source activate env1 && /working/scripts/post_build.sh"
 
 ADD source /workspace
 WORKDIR /workspace
 
-EXPOSE 8888
 
-CMD /bin/bash -c "jupyter lab --ip=0.0.0.0 --allow-root --no-browser"
