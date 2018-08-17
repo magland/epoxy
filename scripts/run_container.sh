@@ -5,8 +5,28 @@ set -e
 image_name="epoxy_image_${SESSION_ID}"
 container_name="epoxy_container_${SESSION_ID}"
 
-cmd="/bin/bash -c \"source activate env1 && jupyter lab --ip=0.0.0.0 --port=$PORT --allow-root --no-browser --NotebookApp.token=''\""
+flags="--name=${container_name} -t"
+if [[ ! -z "${PORT}" ]]; then
+	flags="-p $PORT:$PORT ${flags}"
+fi
 
-cmd2="docker run -p $PORT:$PORT --name=${container_name} -t ${image_name} ${cmd}"
-echo $cmd2
-/bin/bash -c "${cmd2}"
+if [ "${EPOXY_RUN_MODE}" == "jupyterlab" ]; then
+	cmd1="source activate env1 && jupyter lab --ip=0.0.0.0 --port=$PORT --allow-root --no-browser --NotebookApp.token='${EPOXY_JUPYTER_TOKEN}'"
+elif [ "${EPOXY_RUN_MODE}" == "bash" ]; then
+	cmd1="/bin/bash"
+	flags="${flags} -i"
+else
+	echo "Invalid run mode: ${EPOXY_RUN_MODE}"
+	exit -1
+fi
+
+if [[ ! -z "${EPOXY_MOUNT_WORKSPACE}" ]]; then
+	flags="${flags} -v ${EPOXY_MOUNT_WORKSPACE}:/workspace_mounted"
+	cmd1="cd /workspace_mounted && ${cmd1}"
+fi
+
+cmd2="/bin/bash -c \"${cmd1}\""
+
+cmd3="docker run ${flags} ${image_name} ${cmd2}"
+echo $cmd3
+/bin/bash -c "${cmd3}"

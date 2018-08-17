@@ -2,12 +2,15 @@
 
 const fs = require('fs');
 const findPort = require('find-port');
+const opn = require('opn');
 
 function print_usage() {
-  console.info('Usage:');
-  console.info('epoxy [source_directory_or_url]');
-  console.info('epoxy [source_directory_or_url] --port=[port]');
-  console.info('epoxyhub-start');
+  console.info('Usage on local machine:');
+  console.info('epoxy-jupyterlab [source_directory_or_url] --port=[8888]');
+  console.info('epoxy-bash [source_directory_or_url]');
+  console.info('');
+  console.info('To start the server:');
+  console.info('PORT=8080 nmp start');
 }
 
 var CLP = new CLParams(process.argv);
@@ -48,12 +51,29 @@ async function main() {
     await execute_script(__dirname+'/scripts/copy_files_to_build_directory.sh',{env:env});
     await execute_script(__dirname+'/scripts/prepare_source.sh',{env:env});
     await execute_script(__dirname+'/scripts/build_image.sh',{env:env});
-    let port=CLP.namedParameters.port;
-    if (!port) {
-      port=await find_free_port(8101,8999);
+    let run_mode=CLP.namedParameters['run_mode']||'bash';
+    if (run_mode=='jupyterlab') {
+      let port=CLP.namedParameters.port;
+      if (!port) {
+        port=await find_free_port(8101,8999);
+      }
+      env.PORT=port;
+      if (!('no-browser' in CLP.namedParameters)) {
+        opn('http://localhost:'+port);
+      }
+      env.EPOXY_JUPYTER_TOKEN=CLP.namedParameters.jupyter_token||'';
     }
-    env.PORT=port;
-    await execute_script(__dirname+'/scripts/run_container.sh',{env:env});
+    else {
+      env.PORT=""
+    }
+    env.EPOXY_RUN_MODE=run_mode;
+    if ('mount' in CLP.namedParameters) {
+      env.EPOXY_MOUNT_WORKSPACE=source_directory_or_url;
+    }
+    else {
+      env.EPOXY_MOUNT_WORKSPACE='';
+    }
+    await execute_script(__dirname+'/scripts/run_container.sh',{env:env,stdio:'inherit'});
   }
   catch(err) {
     console.error(err);
@@ -111,6 +131,8 @@ async function execute_script(script, opts) {
   };
   if (opts.working_directory)
     spawn_opts.cwd=opts.working_directory;
+  if (opts.stdio)
+    spawn_opts.stdio=opts.stdio;
 
   return new Promise(function(resolve, reject) {
     const spawn = require('child_process').spawn;
@@ -122,12 +144,14 @@ async function execute_script(script, opts) {
       reject(new Error('Error running ' + script + ': ' + err.message));
       return;
     }
-    P.stdout.on('data', (data) => {
-      console.info(data.toString());
-    });
-    P.stderr.on('data', (data) => {
-      console.info(data.toString());
-    });
+    if (opts.stdio!='inherit') {
+      P.stdout.on('data', (data) => {
+        console.info(data.toString());
+      });
+      P.stderr.on('data', (data) => {
+        console.info(data.toString());
+      });
+    }
     P.on('close', (code) => {
       if (code != 0) {
         reject(new Error(`Script exited with non-zero exit code: ${script}`));

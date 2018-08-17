@@ -44,7 +44,7 @@ function next_probe() {
 		if (status.console_out.indexOf('The Jupyter Notebook is running at:')>0) {
 			$('#session_link').empty();
 			let link=`
-			<a href="http://${location.hostname}:${session_info.port}" target=_blank>Open jupyterlab session</a>
+			<a href="http://${location.hostname}:${session_info.port}/lab?token=${session_info.id}" target=_blank>Open jupyterlab session</a>
 			-- keep this tab open while you work
 			`;
 			$('#session_link').append(link);

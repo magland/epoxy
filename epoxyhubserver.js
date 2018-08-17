@@ -104,7 +104,7 @@ app.get('/stopSession', async function(req, res) {
   }
 });
 
-app.use('/web', express.static('web'));
+app.use('/', express.static('web'));
 
 if (process.env.SSL != null ? process.env.SSL : listen_port % 1000 == 443) {
   // The port number ends with 443, so we are using https
@@ -197,7 +197,7 @@ function Session() {
 
   async function start(query) {
     let exe=__dirname+'/epoxy.js';
-    let args=[query.source];
+    let args=[query.source,'--run_mode=jupyterlab','--no-browser','--jupyter_token='+m_id];
     if (m_port)
       args.push('--port='+m_port);
     let opts={};
