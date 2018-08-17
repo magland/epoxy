@@ -47,9 +47,18 @@ async function main() {
   env.BUILD_DIR=build_directory;
   env.TEMPLATE_DIR=template_directory;
   env.SOURCE_DIR_OR_URL=source_directory_or_url;
+  if ('install_jupyterlab' in CLP.namedParameters) {
+    env.EPOXY_INSTALL_JUPYTERLAB='true';
+  }
   try {
-    await execute_script(__dirname+'/scripts/copy_files_to_build_directory.sh',{env:env});
+    console.info('[ Preparing source ... ]');
     await execute_script(__dirname+'/scripts/prepare_source.sh',{env:env});
+    let capsule_mode=is_a_capsule(build_directory+'/source');
+    if (capsule_mode)
+      env.EPOXY_CAPSULE_MODE='true';
+    console.info('[ Copying files to build directory ... ]');
+    await execute_script(__dirname+'/scripts/copy_files_to_build_directory.sh',{env:env});
+    console.info('[ Building image ... ]');
     await execute_script(__dirname+'/scripts/build_image.sh',{env:env});
     let run_mode=CLP.namedParameters['run_mode']||'bash';
     if (run_mode=='jupyterlab') {
@@ -73,6 +82,7 @@ async function main() {
     else {
       env.EPOXY_MOUNT_WORKSPACE='';
     }
+    console.info('[ Running container ... ]');
     await execute_script(__dirname+'/scripts/run_container.sh',{env:env,stdio:'inherit'});
   }
   catch(err) {
@@ -112,6 +122,12 @@ function create_new_build_directory(session_id) {
     fs.mkdirSync(ret);
   }
   return ret;
+}
+
+function is_a_capsule(source_dir) {
+  if (!fs.existsSync(source_dir+'/environment/Dockerfile')) return false;
+  //other criteria?
+  return true;
 }
 
 function is_safe_to_remove_build_directory(dir) {

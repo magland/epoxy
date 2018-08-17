@@ -9,7 +9,7 @@ ADD scripts /working/scripts
 WORKDIR /build
 RUN bash -c "source activate env1 && /working/scripts/post_build.sh"
 
+ADD epoxy.sh /epoxy/epoxy.sh
+RUN bash -c "source activate env1 && bash /epoxy/epoxy.sh"
 ADD source /workspace
 WORKDIR /workspace
-
-

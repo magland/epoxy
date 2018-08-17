@@ -11,13 +11,17 @@ if [[ ! -z "${PORT}" ]]; then
 fi
 
 if [ "${EPOXY_RUN_MODE}" == "jupyterlab" ]; then
-	cmd1="source activate env1 && jupyter lab --ip=0.0.0.0 --port=$PORT --allow-root --no-browser --NotebookApp.token='${EPOXY_JUPYTER_TOKEN}'"
+	cmd1="jupyter lab --ip=0.0.0.0 --port=$PORT --allow-root --no-browser --NotebookApp.token='${EPOXY_JUPYTER_TOKEN}'"
 elif [ "${EPOXY_RUN_MODE}" == "bash" ]; then
 	cmd1="/bin/bash"
 	flags="${flags} -i"
 else
 	echo "Invalid run mode: ${EPOXY_RUN_MODE}"
 	exit -1
+fi
+
+if [[ "${EPOXY_CAPSULE_MODE}" != "true" ]]; then
+	cmd1="source activate env1 && ${cmd1}"
 fi
 
 if [[ ! -z "${EPOXY_MOUNT_WORKSPACE}" ]]; then
