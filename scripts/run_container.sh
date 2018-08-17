@@ -15,6 +15,8 @@ if [ "${EPOXY_RUN_MODE}" == "jupyterlab" ]; then
 elif [ "${EPOXY_RUN_MODE}" == "bash" ]; then
 	cmd1="/bin/bash"
 	flags="${flags} -i"
+elif [ "${EPOXY_RUN_MODE}" == "command" ]; then
+	cmd1="${EPOXY_RUN_COMMAND}"
 else
 	echo "Invalid run mode: ${EPOXY_RUN_MODE}"
 	exit -1

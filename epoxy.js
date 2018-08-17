@@ -8,6 +8,7 @@ function print_usage() {
   console.info('Usage on local machine:');
   console.info('epoxy-jupyterlab [source_directory_or_url] --port=[8888]');
   console.info('epoxy-bash [source_directory_or_url]');
+  console.info('epoxy-run [source_directory_or_url] [command]');
   console.info('');
   console.info('To start the server:');
   console.info('PORT=8080 nmp start');
@@ -16,9 +17,14 @@ function print_usage() {
 var CLP = new CLParams(process.argv);
 
 let arg1 = CLP.unnamedParameters[0] || '';
+let arg2 = CLP.unnamedParameters[1] || '';
 
 let source_directory_or_url=arg1;
 if (!source_directory_or_url) {
+  print_usage();
+  process.exit(-1);
+}
+if ('help' in CLP.namedParameters) {
   print_usage();
   return;
 }
@@ -76,6 +82,9 @@ async function main() {
       env.PORT=""
     }
     env.EPOXY_RUN_MODE=run_mode;
+    if (run_mode=='command') {
+      env.EPOXY_RUN_COMMAND=arg2||'cd code && sh run.sh';
+    }
     if ('mount' in CLP.namedParameters) {
       env.EPOXY_MOUNT_WORKSPACE=source_directory_or_url;
     }
