@@ -62,7 +62,7 @@ postBuild
 
 Ultimately it will support the other ways of specifying the environment (used by repo2docker and binder).
 
-## User permissions
+## Mapping the docker root user to the host's non-root user
 
 If you use the --mount option, then you will almost certainly want the docker container to act as your non-root user when it modifies files in the workspace. This requires a special docker configuration on your local machine. The following instructions are based on this excellent guide: https://blog.yadutaf.fr/2016/04/14/docker-for-your-users-introducing-user-namespace/
 
