@@ -14,6 +14,7 @@ In the second usage, much like binder, it is a web server that provides, on dema
 
 * docker, and [make sure your user is in the docker group](https://docs.docker.com/install/linux/linux-postinstall/)
 * nodejs -- a recent version
+* If you are going to use the --mount option as described below, you will want to configure docker to map the container's root user to the host's non-root user. See below.
 
 ## Installation
 ```
