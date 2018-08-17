@@ -30,19 +30,19 @@ npm install
 Launch an interactive jupyter session for a remote git repository:
 
 ```
-epoxy-run-jupyterlab https://github.com/flatironinstitute/mountainsort_examples
+epoxy-jupyterlab https://github.com/flatironinstitute/mountainsort_examples
 ```
 
 Launch an interactive jupyter session for a local directory:
 
 ```
-epoxy-run-jupyterlab /home/magland/src/mountainsort_examples
+epoxy-jupyterlab /home/magland/src/mountainsort_examples
 ```
 
 Same, except mount the local directory so that source files may be edited both inside and outside the container:
 
 ```
-epoxy-run-jupyterlab /home/magland/src/mountainsort_examples --mount
+epoxy-jupyterlab /home/magland/src/mountainsort_examples --mount
 ```
 
 *Note: when using the --mount option, you will almost certainly want the user in the container to correspond to your non-root user on the host. To configure docker to do this, see the relevant section below.*
@@ -50,7 +50,7 @@ epoxy-run-jupyterlab /home/magland/src/mountainsort_examples --mount
 You can also launch other types of interactive sessions such as bash:
 
 ```
-epoxy-run-bash https://github.com/flatironinstitute/mountainsort_examples
+epoxy-bash https://github.com/flatironinstitute/mountainsort_examples
 ```
 
 ## Notes
