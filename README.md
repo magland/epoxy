@@ -24,19 +24,33 @@ npm install
 
 ## Example usage
 
-```
-epoxy https://github.com/flatironinstitute/mountainsort_examples
-```
+*NOTE: the following are not yet implemented -- I am writing the docs first.*
 
-You'll need to wait for it to build the first time.
-
-Then point your web browser to:
+Launch an interactive jupyter session for a remote git repository:
 
 ```
-http://localhost:8000/lab
+epoxy-run-jupyterlab https://github.com/flatironinstitute/mountainsort_examples
 ```
 
-or substitute the relevant port as indicated in the console output.
+Launch an interactive jupyter session for a local directory:
+
+```
+epoxy-run-jupyterlab /home/magland/src/mountainsort_examples
+```
+
+Same, except mount the local directory so that source files may be edited both inside and outside the container:
+
+```
+epoxy-run-jupyterlab /home/magland/src/mountainsort_examples --mount
+```
+
+*Note: when using the --mount option, you will almost certainly want the user in the container to correspond to your non-root user on the host. To configure docker to do this, see the relevant section below.*
+
+You can also launch other types of interactive sessions such as bash:
+
+```
+epoxy-run-bash https://github.com/flatironinstitute/mountainsort_examples
+```
 
 ## Notes
 
@@ -47,7 +61,7 @@ environment.yml
 postBuild
 ```
 
-You can also use a local directory rather than a github url.
+Ultimately it will support the other ways of specifying the environment (used by repo2docker and binder).
 
 ## User permissions
 
