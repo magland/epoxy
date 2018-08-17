@@ -1,12 +1,12 @@
 # epoxy
 
-Sort of like binder, sort of like repo2docker.
+Sort of like [binder](https://mybinder.readthedocs.io/en/latest/), sort of like [repo2docker](https://github.com/jupyter/repo2docker).
 
 ## What does it do?
 
 Epoxy can be used in two ways.
 
-In the first usage, much like docker2repo, it takes as input a repository or local source directory and builds and runs a docker container with environment inferred from the contents of the repository. It then opens a jupyterlab or other interactive session to interact with the source code. Unlike docker2repo, if the input is a directory on the local machine, the directory can be mounted in the container and therefore the source files can be edited both inside and outside the container.
+In the first usage, much like repo2docker, it takes as input a repository or local source directory and builds and runs a docker container with environment inferred from the contents of the repository. It then opens a jupyterlab or other interactive session to interact with the source code. Unlike repo2docker, if the input is a directory on the local machine, the directory can be mounted in the container and therefore the source files can be edited both inside and outside the container.
 
 In the second usage, much like binder, it is a web server that provides, on demand, the same live, interactive session in a web browser without installing any software locally.
 
@@ -24,8 +24,6 @@ npm install
 ```
 
 ## Example usage
-
-*NOTE: the following are not yet implemented -- I am writing the docs first.*
 
 Launch an interactive jupyter session for a remote git repository:
 
@@ -128,8 +126,25 @@ Again, `[user]` is your user name. Now restart the docker daemon:
 sudo systemctl restart docker
 ```
 
-Now, the root user within docker containers will correspond to your non-root user on the host.
+Now, the root user within docker containers will correspond to your non-root user on the host. To test that this is indeed the case do the following:
 
+```
+docker run -v $PWD:/my_current_dir -it ubuntu /bin/bash -c "cd /my_current_dir && bash"
+```
+
+Once inside this test container, try
+
+```
+touch who_owns_this.txt
+exit
+```
+Now you're back on the host, so check who owns `who_owns_this.txt`
+
+```
+ls -l
+```
+
+We hope it is owned by `[user]` and not root.
 
 
 
