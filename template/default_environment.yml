@@ -1,0 +1,4 @@
+name: default_environment
+
+dependencies:
+ - python=3.6
