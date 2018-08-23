@@ -207,6 +207,7 @@ function Session() {
     m_info.query=JSON.parse(JSON.stringify(query));
     m_info.exe_command=exe+' '+args.join(' ');
     try {
+      console.info('Running: '+exe+' '+args.join(' '));
       m_process=require('child_process').spawn(exe,args,opts);
     }
     catch(err) {
