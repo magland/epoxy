@@ -103,7 +103,7 @@ async function main() {
       if (!capsule_mode) {
         throw new Error('results option is only supported for capsules')
       }
-      env.EPOXY_CAPSULE_RESULTS_DIRECTORY=CLP.namedParameters['results'];
+      env.EPOXY_CAPSULE_RESULTS_DIRECTORY=require('path').resolve(CLP.namedParameters['results']);
     }
     console.info('[ Running container ... ]');
     await execute_script(__dirname+'/scripts/run_container.sh',{env:env,stdio:'inherit'});

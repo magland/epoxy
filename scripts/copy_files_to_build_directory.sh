@@ -9,8 +9,6 @@ if [[ "${EPOXY_CAPSULE_MODE}" == "true" ]]; then
 	echo "##### Added by epoxy:" >> "${BUILD_DIR}"/Dockerfile
 	echo "ADD epoxy.sh /epoxy/epoxy.sh" >> "${BUILD_DIR}"/Dockerfile
 	echo "RUN bash /epoxy/epoxy.sh" >> "${BUILD_DIR}"/Dockerfile
-	echo "ADD source /workspace" >> "${BUILD_DIR}"/Dockerfile
-	echo "WORKDIR /workspace" >> "${BUILD_DIR}"/Dockerfile
 	echo "#####################:" >> "${BUILD_DIR}"/Dockerfile
 
 	echo "set -e" >> "${BUILD_DIR}"/epoxy.sh

@@ -200,6 +200,9 @@ function Session() {
     let args=[query.source,'--run_mode=jupyterlab','--no-browser','--jupyter_token='+m_id];
     if (m_port)
       args.push('--port='+m_port);
+    if (query.install_jupyterlab=='true') {
+      args.push('--install_jupyterlab');
+    }
     let opts={};
     m_info.query=JSON.parse(JSON.stringify(query));
     m_info.exe_command=exe+' '+args.join(' ');

@@ -23,15 +23,19 @@ else
 fi
 
 container_workspace_directory="/workspace"
-docker_args="${docker_args} -v ${SOURCE_DIRECTORY}:${container_workspace_directory}"
 cmd1="cd ${container_workspace_directory} && ${cmd1}"
 
 if [[ "${EPOXY_CAPSULE_MODE}" == "true" ]]; then
+	docker_args="${docker_args} -v ${SOURCE_DIRECTORY}/code:${container_workspace_directory}/code"
+	docker_args="${docker_args} -v ${SOURCE_DIRECTORY}/environment:${container_workspace_directory}/environment"
+	docker_args="${docker_args} -v ${SOURCE_DIRECTORY}/metadata:${container_workspace_directory}/metadata"
+	docker_args="${docker_args} -v ${SOURCE_DIRECTORY}/data:${container_workspace_directory}/data"
 	if [[ ! -z "${EPOXY_CAPSULE_RESULTS_DIRECTORY}" ]]; then
 		mkdir -p ${EPOXY_CAPSULE_RESULTS_DIRECTORY}
 		docker_args="${docker_args} -v ${EPOXY_CAPSULE_RESULTS_DIRECTORY}:${container_workspace_directory}/results"
 	fi
 else
+	docker_args="${docker_args} -v ${SOURCE_DIRECTORY}:${container_workspace_directory}"
 	cmd1="source activate env1 && ${cmd1}"
 fi
 
