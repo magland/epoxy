@@ -1,6 +1,6 @@
 {
   "name": "@magland/epoxy",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Sort of like binder",
   "scripts": {
     "start": "node epoxyhubserver.js",
