@@ -14,7 +14,7 @@ In the second usage, much like binder, it is a web server that provides, on dema
 
 * docker, and [make sure your user is in the docker group](https://docs.docker.com/install/linux/linux-postinstall/)
 * nodejs -- a recent version
-* If you are going to use the --mount option as described below, you will want to configure docker to map the container's root user to the host's non-root user. See below.
+* If you are going to use this with local directories as described below, you will want to configure docker to map the container's root user to the host's non-root user. See below.
 
 ## Installation
 ```
@@ -31,19 +31,15 @@ Launch an interactive jupyter session for a remote git repository:
 epoxy-jupyterlab https://github.com/flatironinstitute/mountainsort_examples
 ```
 
+(Note that you may need to refresh the browser page after the new tab is created)
+
 Launch an interactive jupyter session for a local directory:
 
 ```
 epoxy-jupyterlab /home/magland/src/mountainsort_examples
 ```
 
-Same, except mount the local directory so that source files may be edited both inside and outside the container:
-
-```
-epoxy-jupyterlab /home/magland/src/mountainsort_examples --mount
-```
-
-*Note: when using the --mount option, you will almost certainly want the user in the container to correspond to your non-root user on the host. To configure docker to do this, see the relevant section below.*
+*Note: when using a local directory you will almost certainly want the container to correspond to your non-root user on the host. To configure docker to do this, see the relevant section below.*
 
 You can also launch other types of interactive sessions such as bash:
 
@@ -64,7 +60,7 @@ Ultimately it will support the other ways of specifying the environment (used by
 
 ## Mapping the docker root user to the host's non-root user
 
-If you use the --mount option, then you will almost certainly want the docker container to act as your non-root user when it modifies files in the workspace. This requires a special docker configuration on your local machine. The following instructions are based on this excellent guide: https://blog.yadutaf.fr/2016/04/14/docker-for-your-users-introducing-user-namespace/
+You will probably want the docker container to act as your non-root user when it modifies files in the workspace. This requires a special docker configuration on your local machine. The following instructions are based on this excellent guide: https://blog.yadutaf.fr/2016/04/14/docker-for-your-users-introducing-user-namespace/
 
 You'll need to know your user name and uid. These can be obtained via:
 
