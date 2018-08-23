@@ -28,6 +28,9 @@ if ('help' in CLP.namedParameters) {
   print_usage();
   return;
 }
+if (!is_url(source_directory_or_url)) {
+  source_directory_or_url=require('path').resolve(source_directory_or_url);
+}
 
 let session_id=make_random_id(10);
 let env={};
@@ -53,13 +56,18 @@ async function main() {
   env.BUILD_DIR=build_directory;
   env.TEMPLATE_DIR=template_directory;
   env.SOURCE_DIR_OR_URL=source_directory_or_url;
+  let source_directory=source_directory_or_url;
+  if (is_url(source_directory_or_url)) {
+    source_directory=build_directory+'/source';
+  }
+  env.SOURCE_DIRECTORY=source_directory;
   if ('install_jupyterlab' in CLP.namedParameters) {
     env.EPOXY_INSTALL_JUPYTERLAB='true';
   }
   try {
     console.info('[ Preparing source ... ]');
     await execute_script(__dirname+'/scripts/prepare_source.sh',{env:env});
-    let capsule_mode=is_a_capsule(build_directory+'/source');
+    let capsule_mode=is_a_capsule(source_directory);
     if (capsule_mode)
       env.EPOXY_CAPSULE_MODE='true';
     console.info('[ Copying files to build directory ... ]');
@@ -147,6 +155,10 @@ function is_a_capsule(source_dir) {
 
 function is_safe_to_remove_build_directory(dir) {
   return dir.startsWith(get_epoxy_base_dir() + /builds/);
+}
+
+function is_url(str) {
+  return ((str.startsWith('http:'))||(str.startsWith('https:')));
 }
 
 async function execute_script(script, opts) {

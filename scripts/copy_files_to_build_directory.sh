@@ -3,7 +3,7 @@
 set -e
 
 if [[ "${EPOXY_CAPSULE_MODE}" == "true" ]]; then
-	cp "${BUILD_DIR}"/source/environment/* "${BUILD_DIR}"/ #note we are in trouble if environment/source exists in the capsule
+	cp "${SOURCE_DIRECTORY}"/environment/* "${BUILD_DIR}"/ #note we are in trouble if environment/source exists in the capsule
 
 	echo "" >> "${BUILD_DIR}"/Dockerfile
 	echo "##### Added by epoxy:" >> "${BUILD_DIR}"/Dockerfile

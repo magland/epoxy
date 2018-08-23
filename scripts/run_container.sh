@@ -23,18 +23,11 @@ else
 fi
 
 container_workspace_directory="/workspace"
-if [[ ! -z "${EPOXY_MOUNT_WORKSPACE}" ]]; then
-	container_workspace_directory="/workspace_mounted"
-	docker_args="${docker_args} -v ${EPOXY_MOUNT_WORKSPACE}:${container_workspace_directory}"
-	cmd1="cd ${container_workspace_directory} && ${cmd1}"
-fi
+docker_args="${docker_args} -v ${SOURCE_DIRECTORY}:${container_workspace_directory}"
+cmd1="cd ${container_workspace_directory} && ${cmd1}"
 
 if [[ "${EPOXY_CAPSULE_MODE}" == "true" ]]; then
 	if [[ ! -z "${EPOXY_CAPSULE_RESULTS_DIRECTORY}" ]]; then
-		if [[ ! -z "${EPOXY_MOUNT_WORKSPACE}" ]]; then
-			echo "Problem: cannot use capsule results directory together with --mount option"
-			exit -1
-		fi
 		mkdir -p ${EPOXY_CAPSULE_RESULTS_DIRECTORY}
 		docker_args="${docker_args} -v ${EPOXY_CAPSULE_RESULTS_DIRECTORY}:${container_workspace_directory}/results"
 	fi
