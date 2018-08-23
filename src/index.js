@@ -5,13 +5,14 @@ let session_info={};
 $(document).ready(function() {
 	let query=parse_url_params();
 	let source=query.source;
+	let query_string=window.location.search.substring(1);
 	if (!source) {
 		set_status(`Missing query parameter: source`);
 		return;
 	}
 	set_status(`Building from ${source} ...`);
 
-	$.getJSON('../startSession/?source='+source,function(data) {
+	$.getJSON('../startSession/?'+query_string,function(data) {
 		if (!data.success) {
 			set_status(`Problem building from ${source}: `+data.error);
 			return;
