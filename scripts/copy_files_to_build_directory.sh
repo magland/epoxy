@@ -2,6 +2,10 @@
 
 set -e
 
+if [[ "${EPOXY_HAS_DOCKERFILE}" == "true" ]]; then
+	exit 0
+fi
+
 if [[ "${EPOXY_CAPSULE_MODE}" == "true" ]]; then
 	cp "${SOURCE_DIRECTORY}"/environment/* "${BUILD_DIR}"/ #note we are in trouble if environment/source exists in the capsule
 

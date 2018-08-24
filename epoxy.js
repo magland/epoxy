@@ -70,6 +70,9 @@ async function main() {
     let capsule_mode=is_a_capsule(source_directory);
     if (capsule_mode)
       env.EPOXY_CAPSULE_MODE='true';
+    let has_dockerfile=check_has_dockerfile(source_directory);
+    if (has_dockerfile)
+      env.EPOXY_HAS_DOCKERFILE='true';
     console.info('[ Copying files to build directory ... ]');
     await execute_script(__dirname+'/scripts/copy_files_to_build_directory.sh',{env:env});
     console.info('[ Building image ... ]');
@@ -151,6 +154,10 @@ function is_a_capsule(source_dir) {
   if (!fs.existsSync(source_dir+'/environment/Dockerfile')) return false;
   //other criteria?
   return true;
+}
+
+function check_has_dockerfile(source_dir) {
+  return fs.existsSync(source_dir+'/Dockerfile');
 }
 
 function is_safe_to_remove_build_directory(dir) {
