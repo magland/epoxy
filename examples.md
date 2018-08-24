@@ -28,6 +28,6 @@ epoxy-jupyterlab test_capsule1 --install_jupyterlab
 ### Open JupyterLab session via epoxyhub:
 
 ```
-http://epoxyhub.org/?source=https://github.com/magland/test_capsule1
+http://epoxyhub.org/?source=https://github.com/magland/test_capsule1&install_jupyterlab=true
 ```
 
