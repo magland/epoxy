@@ -12,6 +12,8 @@ fi
 
 if [ "${EPOXY_RUN_MODE}" == "jupyterlab" ]; then
 	cmd1="jupyter lab --ip=0.0.0.0 --port=$PORT --allow-root --no-browser --NotebookApp.token='${EPOXY_JUPYTER_TOKEN}'"
+	#cmd1="/bin/bash"
+	#docker_args="${docker_args} -i"
 elif [ "${EPOXY_RUN_MODE}" == "bash" ]; then
 	cmd1="/bin/bash"
 	docker_args="${docker_args} -i"
@@ -43,7 +45,7 @@ else
 	cmd1="source activate env1 && ${cmd1}"
 fi
 
-cmd2="/bin/bash -c \"${cmd1}\""
+cmd2="/bin/bash -c \"source ~/.bashrc && ${cmd1}\""
 
 cmd3="docker run ${docker_args} ${image_name} ${cmd2}"
 echo $cmd3
