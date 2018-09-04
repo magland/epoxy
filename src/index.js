@@ -1,10 +1,12 @@
 let session_id=undefined;
 let halt_probes=false;
 let session_info={};
+let start_path='';
 
 $(document).ready(function() {
 	let query=parse_url_params();
 	let source=query.source;
+	start_path=query.path||'';
 	let query_string=window.location.search.substring(1);
 	if (!source) {
 		set_status(`Missing query parameter: source`);
@@ -44,8 +46,11 @@ function next_probe() {
 		}
 		if (status.console_out.indexOf('The Jupyter Notebook is running at:')>0) {
 			$('#session_link').empty();
+			let pathstr='';
+			if (start_path)
+				pathstr='/tree/'+start_path;
 			let link=`
-			<a href="http://${location.hostname}:${session_info.port}/lab?token=${session_info.id}" target=_blank>Open jupyterlab session</a>
+			<a href="http://${location.hostname}:${session_info.port}/lab${pathstr}?token=${session_info.id}" target=_blank>Open jupyterlab session</a>
 			-- keep this tab open while you work
 			`;
 			$('#session_link').append(link);

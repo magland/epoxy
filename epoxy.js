@@ -81,7 +81,7 @@ async function main() {
     if (run_mode=='jupyterlab') {
       let port=CLP.namedParameters.port;
       if (!port) {
-        port=await find_free_port(8101,8999);
+        port=await find_free_port(8111,8999);
       }
       env.PORT=port;
       if (!('no-browser' in CLP.namedParameters)) {
