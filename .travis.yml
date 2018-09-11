@@ -1,0 +1,15 @@
+language: node_js
+os:
+- linux
+node_js:
+- node
+install:
+- npm install
+deploy:
+  provider: npm
+  email: jmagland@flatironinstitute.org
+  api_key:
+    secure: GdpOYXdFcGyK4z5jLkJ6Gc263O4HpV+2Zf3r+c1xN5z72Qn/ied52KCRwqdByQSVPVvyrVk6zfrID8qXZx7tN99+z4Wnx6MCKYHs2rSjSwillM/TUMFzObzKFh6igLp2J7331iMgUNm5YpvAJMB5hUnpnU04b2P4R0lFjg/Mr9rFsPz6uMagOiKnC+Z1o3mG5He83o18j2ad3smCDI8yEpu6XeOuo9b9VLW5SHm1hEQqlMvhf0E5fow2aWAS3tkEkcxI6YaED/lvhbk31T3iIYxOmbU//GBO1fXV2e4/TpoiRTTKtbjcP5h35HYlgBFyf7ereF+s4CAamBSYXTDSV7llFElnX8Mjmy3SFRvvRVNUCdxwdSxepRH+ciyAGi/DoCacxEq1TP59L9A3qpXghWYj/FwY2Sjz9W6s5P5Aq7CA8++dz6B6LjmdzWGlqQIXGCCdgQQPW185VK/kARxOEucrENOnysHb9m85pIObEspuw9KsX7QUXWKvXNcbjqq3wOpXPOKwGu8fdqq4m3Rs3Z2Qb9/L5Cg4+oPz+nWPzU3aOGg+FqOQSNjn3pzhAF5JXqbcdrxsL+EIV0Oa1TVhNemeZ68b+KyBJwTsItLJVqaBKGGKmOeQhypp00LqJPucjAJUN8kVpFVBFOxIDpw/KrYYOLW5e3VvYO2nVew8AzQ=
+  on:
+    tags: true
+    repo: magland/epoxy
