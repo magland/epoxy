@@ -12,7 +12,6 @@ package:
   version: {{ version }}
 
 source:
-   #url: {{ repo_url }}/archive/v{{ version }}.tar.gz
    path: ../..
 
 build:
