@@ -1,7 +1,7 @@
 {% set npm = load_npm() %}
 {% set build_script = npm.get('conda',{}).get('build_script',[]) %}
 {% set test_commands = npm.get('conda',{}).get('test_commands',[]) %}
-{% set pkg_name = npm.get('name') %}
+{% set pkg_name = "epoxy" %}
 {% set version = npm.get('version') %}
 {% set build_number = npm.get('conda',{}).get('build_number',0) %}
 {% set repo_url = npm.get('repository').get('url') %}
