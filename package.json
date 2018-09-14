@@ -34,7 +34,6 @@
     "build_script": [
       "tgzfile=$(npm pack)",
       "npm install -g $tgzfile"
-    ],
-    "test_commands": []
+    ]
   }
 }

@@ -2,13 +2,24 @@
 
 set -e
 
+# Make a unique image name and container namem
 image_name="epoxy_image_${SESSION_ID}"
 container_name="epoxy_container_${SESSION_ID}"
 
+# Some docker tags
 docker_args="--name=${container_name} -t"
 if [[ ! -z "${PORT}" ]]; then
+	# there's a port to bind
 	docker_args="-p $PORT:$PORT ${docker_args}"
 fi
+
+if [[ ! -z EPOXY_MOUNT_WORKSPACE ]]; then
+	docker_args="${docker_args} -v ${SOURCE_DIRECTORY}:/workspace_mount"
+	container_workspace_directory="/workspace_mount"
+else
+	container_workspace_directory="/workspace"
+fi
+
 
 if [ "${EPOXY_RUN_MODE}" == "jupyterlab" ]; then
 	cmd1="jupyter lab --ip=0.0.0.0 --port=$PORT --allow-root --no-browser --NotebookApp.token='${EPOXY_JUPYTER_TOKEN}'"
@@ -24,10 +35,8 @@ else
 	exit -1
 fi
 
-if [[ "${EPOXY_HAS_DOCKERFILE}" != "true" ]]; then
-	container_workspace_directory="/workspace"
-	cmd1="cd ${container_workspace_directory} && ${cmd1}"
-fi
+
+cmd1="cd ${container_workspace_directory} && ${cmd1}"
 
 if [[ "${EPOXY_CAPSULE_MODE}" == "true" ]]; then
 	docker_args="${docker_args} -v ${SOURCE_DIRECTORY}/code:${container_workspace_directory}/code"
@@ -41,9 +50,9 @@ if [[ "${EPOXY_CAPSULE_MODE}" == "true" ]]; then
 elif [[ "${EPOXY_HAS_DOCKERFILE}" == "true" ]]; then
 	cmd1="${cmd1}"
 else
-	docker_args="${docker_args} -v ${SOURCE_DIRECTORY}:${container_workspace_directory}"
 	cmd1="source activate env1 && ${cmd1}"
 fi
+
 
 cmd2="/bin/bash -c \"source ~/.bashrc && ${cmd1}\""
 

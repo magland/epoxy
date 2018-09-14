@@ -31,9 +31,7 @@ requirements:
 
 test:
   commands:
-    {% for line in test_commands %}
-      - {{ line }}
-    {% endfor %}
+    - npm test
   requires:
     - nodejs
 
