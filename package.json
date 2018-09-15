@@ -4,7 +4,7 @@
   "description": "Sort of like binder",
   "scripts": {
     "start": "node epoxyhubserver.js",
-    "postinstall": "npm run webpack",
+    "install_epoxyhub": "npm install && npm webpack",
     "webpack": "node --use-strict node_modules/webpack/bin/webpack.js --devtool source-map --mode development",
     "test": "echo \"No test specified\" && exit 0"
   },
