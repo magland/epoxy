@@ -16,7 +16,7 @@ In the second usage, much like binder, it is a web server that provides, on dema
 * nodejs -- a recent version
 * If you are going to use this with local directories as described below, you will want to configure docker to map the container's root user to the host's non-root user. See below.
 
-## Installation using conda
+## Installation using conda (linux only):
 
 ```
 conda install -c flatiron epoxy
